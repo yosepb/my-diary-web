@@ -24,12 +24,6 @@ app.use((req, res, next) => {
   next();
 });
 
-diaryEntries = [
-  { id: 1, date: "March 1st", entry: "Entry 1" },
-  { id: 2, date: "March 11st", entry: "Entry 2" },
-  { id: 3, date: "March 21st", entry: "Entry 3" },
-];
-
 app.get("/diary-entries", (req, res, next) => {
   DiaryEntryModel.find()
     .then((data) => {
@@ -38,16 +32,6 @@ app.get("/diary-entries", (req, res, next) => {
     .catch(() => {
       console.log("Error fetching entries");
     });
-});
-
-app.get("/max-id", (req, res) => {
-  let max = 0;
-  for (let i = 0; i < diaryEntries.length; i++) {
-    if (diaryEntries[i].id > max) {
-      max = diaryEntries[i].id;
-    }
-  }
-  res.json({ maxId: max });
 });
 
 app.post("/add-entry", (req, res) => {
@@ -60,25 +44,21 @@ app.post("/add-entry", (req, res) => {
 });
 
 app.delete("/remove-entry/:id", (req, res) => {
-  const index = diaryEntries.findIndex((el) => {
-    return el.id == req.params.id;
+  DiaryEntryModel.deleteOne({ _id: req.params.id }).then(() => {
+    res.status(200).json({ message: "Post deleted" });
   });
-  diaryEntries.splice(index, 1);
-  res.status(200).json({ message: "Post deleted" });
 });
 
 app.put("/update-entry/:id", (req, res) => {
-  const index = diaryEntries.findIndex((el) => {
-    return el.id == req.params.id;
-  });
-
-  let id = req.body.id;
+  let _id = req.body.id;
   let date = req.body.date;
   let entry = req.body.entry;
 
-  diaryEntries[index] = { id, date, entry };
+  const updatedEntry = new DiaryEntryModel({ _id, date, entry });
 
-  res.status(200).json({ message: "Post updated" });
+  DiaryEntryModel.updateOne({ _id }, updatedEntry).then(() => {
+    res.status(200).json({ message: "Post updated" });
+  });
 });
 
 module.exports = app;

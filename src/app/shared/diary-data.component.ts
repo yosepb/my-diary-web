@@ -32,7 +32,7 @@ export class DiaryDataService {
       });
   }
 
-  getDiaryEntry(id: number) {
+  getDiaryEntry(id: string) {
     const index = this.diaryEntries.findIndex((el) => {
       return el.id == id;
     });
@@ -41,22 +41,14 @@ export class DiaryDataService {
 
   onAddDiaryEntry(diaryEntry: DiaryEntry) {
     this.http
-      .get<{ maxId: number }>('http://localhost:3000/max-id')
+      .post<{ message: string }>('http://localhost:3000/add-entry', diaryEntry)
       .subscribe((jsonData) => {
-        diaryEntry.id = jsonData.maxId + 1;
-        this.http
-          .post<{ message: string }>(
-            'http://localhost:3000/add-entry',
-            diaryEntry
-          )
-          .subscribe((jsonData) => {
-            console.log(diaryEntry);
-            this.getDiaryEntries();
-          });
+        console.log(jsonData.message);
+        this.getDiaryEntries();
       });
   }
 
-  onUpdateEntry(id: number, entry: DiaryEntry) {
+  onUpdateEntry(id: string, entry: DiaryEntry) {
     this.http
       .put<{ message: string }>(
         'http://localhost:3000/update-entry/' + id,
@@ -68,7 +60,7 @@ export class DiaryDataService {
       });
   }
 
-  onDeleteEntry(id: number) {
+  onDeleteEntry(id: string) {
     this.http
       .delete<{ message: string }>('http://localhost:3000/remove-entry/' + id)
       .subscribe((jsonData) => {
