@@ -8,12 +8,14 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let diaryEntry of diaryEntries; let i = index">
-      <td>{{ diaryEntry.date }}</td>
-      <td>{{ diaryEntry.entry }}</td>
+    <tr *ngFor="let diary of diaryEntries; let i = index">
+      <td>{{ diary.date }}</td>
+      <td>{{ diary.entry }}</td>
       <td>
-        <button (click)="onEdit(i)" class="btn btn-light">Edit</button>
-        <button (click)="onDelete(i)" class="btn btn-danger">Delete</button>
+        <button (click)="onEdit(diary.id)" class="btn btn-light">Edit</button>
+        <button (click)="onDelete(diary.id)" class="btn btn-danger">
+          Delete
+        </button>
       </td>
     </tr>
   </tbody>

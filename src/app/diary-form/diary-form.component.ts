@@ -50,6 +50,7 @@ export class DiaryFormComponent implements OnInit {
     );
 
     if (this.editMode) {
+      newEntry.id = +this.paramId;
       this.diaryDataService.onUpdateEntry(this.paramId, newEntry);
     } else {
       this.diaryDataService.onAddDiaryEntry(newEntry);
