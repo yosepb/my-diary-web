@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 })
 export class DiaryComponent implements OnInit, OnDestroy {
   diaryEntries: DiaryEntry[];
-  // diarySubscription = new Subscription();
   diaryEntriesSub = new Subscription();
 
   constructor(

@@ -10,11 +10,6 @@ export class DiaryDataService {
   public diarySubject = new Subject<DiaryEntry[]>();
   private diaryEntries: DiaryEntry[] = [];
 
-  onAddDiaryEntry(diaryEntry: DiaryEntry) {
-    this.diaryEntries.push(diaryEntry);
-    this.diarySubject.next(this.diaryEntries);
-  }
-
   getDiaryEntries() {
     this.http
       .get<{ diaryEntries: DiaryEntry[] }>(
@@ -28,6 +23,14 @@ export class DiaryDataService {
 
   getDiaryEntry(id: number) {
     return { ...this.diaryEntries[id] };
+  }
+
+  onAddDiaryEntry(diaryEntry: DiaryEntry) {
+    this.http
+      .post<{ message: string }>('http://localhost:3000/add-entry', diaryEntry)
+      .subscribe((jsonData) => {
+        this.getDiaryEntries();
+      });
   }
 
   onUpdateEntry(id: number, entry: DiaryEntry) {
