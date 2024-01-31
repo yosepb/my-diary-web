@@ -1,33 +1,42 @@
 import { Injectable } from '@angular/core';
 import { DiaryEntry } from './diary-entry.model';
 import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class DiaryDataService {
-  diarySubject = new Subject<DiaryEntry[]>();
+  constructor(private http: HttpClient) {}
 
-  diaryEntries: DiaryEntry[] = [
-    new DiaryEntry('Jan 1st', 'Entry 1'),
-    new DiaryEntry('Jan 2nd', 'Hello Worlds'),
-    new DiaryEntry('Jan 3rd', 'Hello Mars'),
-  ];
-
-  onDelete(index: number) {
-    this.diaryEntries.splice(index, 1);
-    this.diarySubject.next(this.diaryEntries);
-  }
+  public diarySubject = new Subject<DiaryEntry[]>();
+  private diaryEntries: DiaryEntry[] = [];
 
   onAddDiaryEntry(diaryEntry: DiaryEntry) {
     this.diaryEntries.push(diaryEntry);
     this.diarySubject.next(this.diaryEntries);
   }
 
-  getDiaryEntry(index: number) {
-    return { ...this.diaryEntries[index] };
+  getDiaryEntries() {
+    this.http
+      .get<{ diaryEntries: DiaryEntry[] }>(
+        'http://localhost:3000/diary-entries'
+      )
+      .subscribe((jsonData) => {
+        this.diaryEntries = jsonData.diaryEntries;
+        this.diarySubject.next(this.diaryEntries);
+      });
   }
 
-  onUpdateEntry(paramId: number, newEntry: DiaryEntry) {
-    this.diaryEntries[paramId] = newEntry;
+  getDiaryEntry(id: number) {
+    return { ...this.diaryEntries[id] };
+  }
+
+  onUpdateEntry(id: number, entry: DiaryEntry) {
+    this.diaryEntries[id] = entry;
+    this.diarySubject.next(this.diaryEntries);
+  }
+
+  onDeleteEntry(id: number) {
+    this.diaryEntries.splice(id, 1);
     this.diarySubject.next(this.diaryEntries);
   }
 }

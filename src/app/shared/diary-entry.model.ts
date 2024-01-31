@@ -1,6 +1,7 @@
 export class DiaryEntry {
-    constructor(public date: String, public entry: string){
-
-    }
+  public constructor(
+    public id: number,
+    public date: String,
+    public entry: string
+  ) {}
 }
-
