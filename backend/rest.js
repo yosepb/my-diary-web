@@ -31,7 +31,13 @@ diaryEntries = [
 ];
 
 app.get("/diary-entries", (req, res, next) => {
-  res.json({ diaryEntries });
+  DiaryEntryModel.find()
+    .then((data) => {
+      res.json({ diaryEntries });
+    })
+    .catch(() => {
+      console.log("Error fetching entries");
+    });
 });
 
 app.get("/max-id", (req, res) => {
@@ -45,16 +51,11 @@ app.get("/max-id", (req, res) => {
 });
 
 app.post("/add-entry", (req, res) => {
-  let id = req.body.id;
   let date = req.body.date;
   let entry = req.body.entry;
+
   const DiaryEntry = new DiaryEntryModel({ date, entry });
-
-  console.log(DiaryEntry);
-
-  diaryEntries.push({ id, date, entry });
-
-  // status berhasil
+  DiaryEntry.save();
   res.status(200).json({ message: "Post submitted" });
 });
 

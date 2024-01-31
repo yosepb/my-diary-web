@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DiaryEntry } from './diary-entry.model';
-import { Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
@@ -12,11 +12,22 @@ export class DiaryDataService {
 
   getDiaryEntries() {
     this.http
-      .get<{ diaryEntries: DiaryEntry[] }>(
-        'http://localhost:3000/diary-entries'
+      .get<{ diaryEntries: any }>('http://localhost:3000/diary-entries')
+      .pipe(
+        map((responseData) => {
+          return responseData.diaryEntries.map(
+            (entry: { date: string; entry: string; _id: string }) => {
+              return {
+                date: entry.date,
+                entry: entry.entry,
+                id: entry._id,
+              };
+            }
+          );
+        })
       )
-      .subscribe((jsonData) => {
-        this.diaryEntries = jsonData.diaryEntries;
+      .subscribe((updateResponse) => {
+        this.diaryEntries = updateResponse;
         this.diarySubject.next(this.diaryEntries);
       });
   }
