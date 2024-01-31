@@ -33,7 +33,7 @@ diaryEntries = [
 app.get("/diary-entries", (req, res, next) => {
   DiaryEntryModel.find()
     .then((data) => {
-      res.json({ diaryEntries });
+      res.json({ diaryEntries: data });
     })
     .catch(() => {
       console.log("Error fetching entries");
