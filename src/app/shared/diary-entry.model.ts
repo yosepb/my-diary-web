@@ -4,4 +4,3 @@ export class DiaryEntry {
     }
 }
 
-// ini file konstruktor untuk ngFor ?

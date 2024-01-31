@@ -5,12 +5,13 @@ import { DiaryFormComponent } from './diary-form/diary-form.component';
 
 // konfigurasi routing disini
 const routes: Routes = [
-  {path:"", component: DiaryComponent},
-  {path:"data-entry", component: DiaryFormComponent}
+  { path: '', component: DiaryComponent },
+  { path: 'data-entry', component: DiaryFormComponent },
+  { path: 'edit/:id', component: DiaryFormComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
